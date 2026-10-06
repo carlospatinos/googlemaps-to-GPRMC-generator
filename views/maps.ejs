@@ -18,7 +18,7 @@
         <div id="wrapper">
             <div id="map"></div>
             <div id="sidebar">
-                <div id="controls">
+                <div id="controls" class="container">
                     <!-- <button type="button" onClick="reset()" >Reset</button> -->
                     <button type="button" class="btn btn-secondary" onClick="reset()">Reset</button>
                     <form id ="dateTime">
@@ -44,14 +44,15 @@
                             <label class="form-check-label" for="timeAndDatePlaceHolders">Use Placeholders</label>
                         </div>
                     </form>
+                    <div >
+                        <textarea id="GPRMC" class="form-control" rows="10" ></textarea>
+                        &nbsp;
+                        <textarea id="FOXEVENTS" class="form-control" rows="10"></textarea>
+                        &nbsp;
+                        <textarea id="decDeg" class="form-control" rows="10"></textarea>
+                    </div>
                 </div>
-                <div id="coordisplay">
-                    <textarea id="GPRMC" ></textarea>
-                    &nbsp;
-                    <textarea id="FOXEVENTS" ></textarea>
-                    &nbsp;
-                    <textarea id="decDeg" ></textarea>
-                </div>
+                
             </div>
         </div>
 

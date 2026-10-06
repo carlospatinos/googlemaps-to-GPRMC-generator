@@ -34,15 +34,15 @@ body  {
     width: 95%;
 }
 
-#coordisplay{
+{{/* #coordisplay{
     padding-left: 3%;
     padding-right: 3%;
     color: #000;
     width: 94%;
     height: 91%;
-}
+} */}}
 
-#GPRMC{
+{{/* #GPRMC{
     width: 100%;
     height: 32%;
 }
@@ -55,11 +55,8 @@ body  {
 #decDeg{
     width: 100%;
     height: 32%;
-}
+} */}}
 
-#dateTime{
-    float: right;
-}
 
 {{/* .input-group-btn.input-space {
   padding-left: 50px;
