@@ -44,12 +44,17 @@ body  {
 
 #GPRMC{
     width: 100%;
-    height: 47%;
+    height: 32%;
+}
+
+#FOXEVENTS{
+    width: 100%;
+    height: 32%;
 }
 
 #decDeg{
     width: 100%;
-    height: 47%;
+    height: 32%;
 }
 
 #dateTime{

@@ -29,9 +29,14 @@ function addMarker(p) {
         marker.setMap(map);
         markers.push(marker);
 
+        
         areTimeAndDatePlaceHoldersInUse = document.getElementById("timeAndDatePlaceHolders").checked;
+        
+        imei = document.getElementById("imei").value
 
-        document.getElementById("GPRMC").value += decCoords2GPRMC(p.latLng, time, date, areTimeAndDatePlaceHoldersInUse) + "\n";
+        gprmcEvent = decCoords2GPRMC(p.latLng, time, date, areTimeAndDatePlaceHoldersInUse);
+        document.getElementById("GPRMC").value += gprmcEvent + "\n";
+        document.getElementById("FOXEVENTS").value += generateFoxEvents(imei, gprmcEvent) + "\n";
         document.getElementById("decDeg").value += p.latLng.lat().toFixed(4).toString() +',' + p.latLng.lng().toFixed(4).toString() + "\n";
     }
 }
@@ -69,6 +74,11 @@ function decCoords2GPRMC(latlng, time, date, areTimeAndDatePlaceHoldersInUse) {
         
     }
     return '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89';
+}
+
+function generateFoxEvents(imei, gprmc) {
+    event = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imei + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>\n"; + "\n";
+    return event;
 }
 
 

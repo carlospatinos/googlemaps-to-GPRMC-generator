@@ -24,6 +24,10 @@
                     <form id ="dateTime">
                     <!-- Date: <input type="text" name="date" id="date"/> -->
                         <div class="input-group mb-3">
+                            <span class="input-group-text">IMEI</span>
+                            <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI" value="352254060256234">
+                             &nbsp; &nbsp; &nbsp;
+
                             <span class="input-group-text">Date</span>
                             <input type="date" class="form-control" name="date" id="date" placeholder="Date">
                              &nbsp; &nbsp; &nbsp;
@@ -33,15 +37,18 @@
                             <!-- </span> -->
                              &nbsp; &nbsp; &nbsp;
 
-                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="timeAndDatePlaceHolders" name="timeAndDatePlaceHolders" value="no">
-                                <label class="form-check-label" for="timeAndDatePlaceHolders">Use Placeholders</label>
-                            </div>
+                             
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="timeAndDatePlaceHolders" name="timeAndDatePlaceHolders" value="no">
+                            <label class="form-check-label" for="timeAndDatePlaceHolders">Use Placeholders</label>
                         </div>
                     </form>
                 </div>
                 <div id="coordisplay">
                     <textarea id="GPRMC" ></textarea>
+                    &nbsp;
+                    <textarea id="FOXEVENTS" ></textarea>
                     &nbsp;
                     <textarea id="decDeg" ></textarea>
                 </div>
