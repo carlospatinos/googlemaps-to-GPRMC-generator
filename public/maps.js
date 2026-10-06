@@ -1,21 +1,3 @@
-/* 
-    Copyright (C) 2012  Jonah Murphy
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
-
 var map;
 var markers = new Array();
 var time = false;
@@ -46,7 +28,10 @@ function addMarker(p) {
         var marker = new google.maps.Marker({position:p.latLng, title: (markers.length+1).toString()});
         marker.setMap(map);
         markers.push(marker);
-        document.getElementById("GPRMC").value += decCoords2GPRMC(p.latLng, time,date) + "\n";
+
+        areTimeAndDatePlaceHoldersInUse = document.getElementById("timeAndDatePlaceHolders").checked;
+
+        document.getElementById("GPRMC").value += decCoords2GPRMC(p.latLng, time, date, areTimeAndDatePlaceHoldersInUse) + "\n";
         document.getElementById("decDeg").value += p.latLng.lat().toFixed(4).toString() +',' + p.latLng.lng().toFixed(4).toString() + "\n";
     }
 }
@@ -68,14 +53,22 @@ function formatLon(lon) {
 }
 
 //Create a GPRMC Sentence from the cordinates, time and date
-function decCoords2GPRMC(latlng, time, date) {
+function decCoords2GPRMC(latlng, time, date, areTimeAndDatePlaceHoldersInUse) {
     var lat = DD2DM( latlng.lat());
     var lng = DD2DM( latlng.lng());
 
     lat = formatLat(lat.toFixed(4));
     lng = formatLon(lng.toFixed(4));
 
-    return '$GPRMC,'+time+',A,'+lat +','+lng+',,,'+date+',,,A*89';
+    if(areTimeAndDatePlaceHoldersInUse) {
+        timeValue = "TIME_PLACEHOLDER";
+        dateValue = "DATE_PLACEHOLDER";
+    } else {
+        timeValue = time;
+        dateValue = date;
+        
+    }
+    return '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89';
 }
 
 

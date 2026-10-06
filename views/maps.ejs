@@ -9,9 +9,9 @@
         <script type="text/javascript" src="maps.js" ></script>
         <!-- Latest compiled and minified CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
         <!-- Latest compiled JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+        
     </head>
 
     <body>
@@ -22,19 +22,50 @@
                     <!-- <button type="button" onClick="reset()" >Reset</button> -->
                     <button type="button" class="btn btn-secondary" onClick="reset()">Reset</button>
                     <form id ="dateTime">
-                    Date: <input type="text" name="date" id="date"/>
-                        <!-- <div class="input-group">
+                    <!-- Date: <input type="text" name="date" id="date"/> -->
+                        <div class="input-group mb-3">
                             <span class="input-group-text">Date</span>
-                            <input type="text" class="form-control" name="date" id="date" placeholder="Date">
-                        </div> -->
-                    Time: <input type="text" name="time" id="time" />
+                            <input type="date" class="form-control" name="date" id="date" placeholder="Date">
+                             &nbsp; &nbsp; &nbsp;
+                            <!-- <span class="input-group-btn input-space"> -->
+                                <span class="input-group-text">Time</span>
+                                <input type="time" class="form-control" name="time" id="time" placeholder="Time" min="07:00" max="22:00">
+                            <!-- </span> -->
+                             &nbsp; &nbsp; &nbsp;
+
+                             <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="timeAndDatePlaceHolders" name="timeAndDatePlaceHolders" value="no">
+                                <label class="form-check-label" for="timeAndDatePlaceHolders">Use Placeholders</label>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div id="coordisplay">
                     <textarea id="GPRMC" ></textarea>
+                    &nbsp;
                     <textarea id="decDeg" ></textarea>
                 </div>
             </div>
         </div>
+
+         <script>
+            const dateElement = document.getElementById('date');
+            dateElement.valueAsDate = new Date();
+
+            const timeElement = document.getElementById('time');
+            timeElement.value = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+            const timeAndDatePlaceHolders = document.getElementById('timeAndDatePlaceHolders')
+
+            timeAndDatePlaceHolders.addEventListener('change', (event) => {
+                if (event.currentTarget.checked) {
+                    timeElement.disabled = true;
+                    dateElement.disabled = true;
+                } else {
+                    timeElement.disabled = false;
+                    dateElement.disabled = false;
+                }
+            })
+        </script>
     </body>
 </html>
