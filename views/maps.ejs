@@ -19,8 +19,10 @@
             <div id="map"></div>
             <div id="sidebar">
                 <div id="controls" class="container">
-                    <!-- <button type="button" onClick="reset()" >Reset</button> -->
-                    <button type="button" class="btn btn-secondary" onClick="reset()">Reset</button>
+                    <div class="input-group mb-3">
+                        <!-- <button type="button" onClick="reset()" >Reset</button> -->
+                        <button type="button" class="btn btn-secondary" onClick="reset()">Reset</button>
+                    </div>
                     <form id ="dateTime">
                     <!-- Date: <input type="text" name="date" id="date"/> -->
                         <div class="input-group mb-3">
@@ -40,8 +42,8 @@
                              
                         </div>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="timeAndDatePlaceHolders" name="timeAndDatePlaceHolders" value="no">
-                            <label class="form-check-label" for="timeAndDatePlaceHolders">Use Placeholders</label>
+                            <input class="form-check-input" type="checkbox" id="placeHoldersCB" name="placeHoldersCB" value="no">
+                            <label class="form-check-label" for="placeHoldersCB">Use Placeholders</label>
                         </div>
                     </form>
                     <div >
@@ -63,9 +65,9 @@
             const timeElement = document.getElementById('time');
             timeElement.value = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
-            const timeAndDatePlaceHolders = document.getElementById('timeAndDatePlaceHolders')
+            const placeHoldersCB = document.getElementById('placeHoldersCB')
 
-            timeAndDatePlaceHolders.addEventListener('change', (event) => {
+            placeHoldersCB.addEventListener('change', (event) => {
                 if (event.currentTarget.checked) {
                     timeElement.disabled = true;
                     dateElement.disabled = true;

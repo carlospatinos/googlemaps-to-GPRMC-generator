@@ -30,13 +30,15 @@ function addMarker(p) {
         markers.push(marker);
 
         
-        areTimeAndDatePlaceHoldersInUse = document.getElementById("timeAndDatePlaceHolders").checked;
+        placeHoldersCBValue = document.getElementById("placeHoldersCB").checked;
+        console.log("placeHoldersCBValue: " + placeHoldersCBValue);
         
         imei = document.getElementById("imei").value
 
-        gprmcEvent = decCoords2GPRMC(p.latLng, time, date, areTimeAndDatePlaceHoldersInUse);
+        gprmcEvent = decCoords2GPRMC(p.latLng, time, date, placeHoldersCBValue);
         document.getElementById("GPRMC").value += gprmcEvent + "\n";
-        document.getElementById("FOXEVENTS").value += generateFoxEvents(imei, gprmcEvent) + "\n";
+        foxEvent = generateFoxEvents(imei, gprmcEvent, placeHoldersCBValue);
+        document.getElementById("FOXEVENTS").value += foxEvent + "\n";
         document.getElementById("decDeg").value += p.latLng.lat().toFixed(4).toString() +',' + p.latLng.lng().toFixed(4).toString() + "\n";
     }
 }
@@ -58,14 +60,14 @@ function formatLon(lon) {
 }
 
 //Create a GPRMC Sentence from the cordinates, time and date
-function decCoords2GPRMC(latlng, time, date, areTimeAndDatePlaceHoldersInUse) {
+function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
     var lat = DD2DM( latlng.lat());
     var lng = DD2DM( latlng.lng());
 
     lat = formatLat(lat.toFixed(4));
     lng = formatLon(lng.toFixed(4));
 
-    if(areTimeAndDatePlaceHoldersInUse) {
+    if(placeHoldersCB) {
         timeValue = "TIME_PLACEHOLDER";
         dateValue = "DATE_PLACEHOLDER";
     } else {
@@ -76,9 +78,15 @@ function decCoords2GPRMC(latlng, time, date, areTimeAndDatePlaceHoldersInUse) {
     return '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89';
 }
 
-function generateFoxEvents(imei, gprmc) {
-    event = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imei + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>\n"; + "\n";
-    return event;
+function generateFoxEvents(imei, gprmc, placeHoldersCB) {
+    if(placeHoldersCB) {
+        imeiValue = "IMEI_PLACEHOLDER";
+    } else {
+        imeiValue = imei;
+        
+    }
+    foxEvent = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imeiValue + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>\n"; + "\n";
+    return foxEvent;
 }
 
 

@@ -33,31 +33,3 @@ body  {
     height: 7%;
     width: 95%;
 }
-
-{{/* #coordisplay{
-    padding-left: 3%;
-    padding-right: 3%;
-    color: #000;
-    width: 94%;
-    height: 91%;
-} */}}
-
-{{/* #GPRMC{
-    width: 100%;
-    height: 32%;
-}
-
-#FOXEVENTS{
-    width: 100%;
-    height: 32%;
-}
-
-#decDeg{
-    width: 100%;
-    height: 32%;
-} */}}
-
-
-{{/* .input-group-btn.input-space {
-  padding-left: 50px;
-} */}}
