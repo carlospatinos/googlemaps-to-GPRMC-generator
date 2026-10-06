@@ -25,10 +25,11 @@ google.maps.event.addDomListener(window, 'load', init);
 
 function init() {
     var mapDiv = document.getElementById('map');
+    // ATHLONE
     map = new google.maps.Map(mapDiv, {
-      center: new google.maps.LatLng(53, -9.05),
-      zoom: 6,
-      mapTypeId: google.maps.MapTypeId.SATELLITE
+      center: new google.maps.LatLng(53.423809, -7.934634),
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.MAP
     });
 
     google.maps.event.addListener(map, 'click', addMarker);

@@ -1,4 +1,4 @@
-"Whats Here" To GPRMC
+# Google Maps To GPRMC Sentence
 ===================
 
 A simple no frills tool to generate [GPRMC Sentences](http://aprs.gids.nl/nmea/#rmc) using Google Maps.
@@ -18,7 +18,12 @@ The code will be need to be updated to add the correct checksum etc if that is w
 
 ![Whats Here To GPRMC Screenshot](https://github.com/murjay/Whats-Here-To-GPRMC/raw/master/doc/screenshot.png)
 
-Usage
+# How to run
+- install node and npm
+- run npm install
+- run npm start
+
+# Usage
 -----
 
 1. Add a date in UTC format to the date text box e.g 2nd of April 2013 ==> 020413 (There is no error checking, so get it right!)
@@ -28,7 +33,6 @@ Usage
 
 License
 -------
-Copyright © 2013 Jonah Murphy
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
