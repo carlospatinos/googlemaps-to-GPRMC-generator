@@ -34,10 +34,14 @@ function addMarker(p) {
         console.log("placeHoldersCBValue: " + placeHoldersCBValue);
         
         imei = document.getElementById("imei").value
+        eventType = document.getElementById("eventType").value
+
 
         gprmcEvent = decCoords2GPRMC(p.latLng, time, date, placeHoldersCBValue);
         document.getElementById("GPRMC").value += gprmcEvent + "\n";
-        foxEvent = generateFoxEvents(imei, gprmcEvent, placeHoldersCBValue);
+
+
+        foxEvent = generateFoxEvents(imei, gprmcEvent, eventType, placeHoldersCBValue);
         document.getElementById("FOXEVENTS").value += foxEvent + "\n";
         document.getElementById("decDeg").value += p.latLng.lat().toFixed(4).toString() +',' + p.latLng.lng().toFixed(4).toString() + "\n";
     }
@@ -78,14 +82,30 @@ function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
     return '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89';
 }
 
-function generateFoxEvents(imei, gprmc, placeHoldersCB) {
+function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB) {
     if(placeHoldersCB) {
         imeiValue = "IMEI_PLACEHOLDER";
     } else {
         imeiValue = imei;
         
     }
-    foxEvent = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imeiValue + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>\n"; + "\n";
+    switch(eventType) {
+        case "login":
+            foxEvent = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imeiValue + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>\n"; + "\n";
+            break;
+        case "ignition_on":
+            foxEvent = "$<" + imeiValue + " Ignition On Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>\n"
+            break;
+        case "ignition_off":
+            foxEvent = "$<" + imeiValue + " Ignition Off Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>\n"
+            break;
+        case "position":
+            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Fuel='35' Odo='91823000' Total_Engine_Hours='4036'>*69\n" + gprmc + "$<end>\n";
+            break;
+        default:
+            foxEvent = "ERROR";
+    }
+
     return foxEvent;
 }
 
