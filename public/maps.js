@@ -84,9 +84,8 @@ function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
         dateValue = date;
         
     }
-    // '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89'
-    // $GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519,,*14
-    console.log('Valid GPRMC *14: *' + nmeaChecksum('$GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519'))
+
+    // console.log('Valid GPRMC *14: *' + nmeaChecksum('$GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519'))
     
     gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
     gprmc += '*' + nmeaChecksum(gprmc);
@@ -116,16 +115,16 @@ function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB) {
     }
     switch(eventType) {
         case "login":
-            foxEvent = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imeiValue + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>\n"; + "\n";
+            foxEvent = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imeiValue + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>";
             break;
         case "ignition_on":
-            foxEvent = "$<" + imeiValue + " Ignition On Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>\n"
+            foxEvent = "$<" + imeiValue + " Ignition On Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>"
             break;
         case "ignition_off":
-            foxEvent = "$<" + imeiValue + " Ignition Off Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>\n"
+            foxEvent = "$<" + imeiValue + " Ignition Off Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>"
             break;
         case "position":
-            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Fuel='35' Odo='91823000' Total_Engine_Hours='4036'>*69\n" + gprmc + "$<end>\n";
+            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Fuel='35' Odo='91823000' Total_Engine_Hours='4036'>*69\n" + gprmc + "$<end>";
             break;
         default:
             foxEvent = "ERROR";
@@ -162,6 +161,7 @@ function  DD2DM(DegreesDec) {
 function reset() {
     document.getElementById("GPRMC").value = " ";
     document.getElementById("decDeg").value = " ";
+    document.getElementById("FOXEVENTS").value = " ";
 
     if (markers) {
         for (i in markers) {
@@ -169,5 +169,21 @@ function reset() {
         }
     }
     markers = new Array();
+}
+
+var timerVar = setInterval(countTimer, 1000);
+function countTimer() {
+    var date = new Date();
+
+    var seconds = date.getSeconds();
+    var minutes = date.getMinutes();
+    var hour = date.getHours();
+
+    const paddedSec = (seconds + "").padStart(2, "0");
+    const paddedMin = (minutes + "").padStart(2, "0");
+    const paddedHour = (hour + "").padStart(2, "0");
+    
+    console.log("Timer called: " + paddedHour + ":" + paddedMin + ":" + paddedSec);
+    document.getElementById("time").value = paddedHour + ":" + paddedMin + ":" + paddedSec;
 }
 
