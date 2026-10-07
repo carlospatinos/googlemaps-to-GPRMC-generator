@@ -20,8 +20,6 @@ function init() {
 function addMarker(p) {
     var date = document.getElementById('date').value;
     var time = document.getElementById('time').value;
-    
-
 
     if(date == "" || time == "") {
         alert("Enter time and date in UTC format");
@@ -29,9 +27,10 @@ function addMarker(p) {
         var marker = new google.maps.Marker({position:p.latLng, title: (markers.length+1).toString()});
         marker.setMap(map);
         markers.push(marker);
-
         
         placeHoldersCBValue = document.getElementById("placeHoldersCB").checked;
+        multilineCBValue = document.getElementById('multiline').checked
+
         
         imei = document.getElementById("imei").value
         eventType = document.getElementById("eventType").value
@@ -46,50 +45,29 @@ function addMarker(p) {
         document.getElementById("GPRMC").value += gprmcEvent + "\n";
 
 
-        foxEvent = generateFoxEvents(imei, gprmcEvent, eventType, placeHoldersCBValue);
+        foxEvent = generateFoxEvents(imei, gprmcEvent, eventType, placeHoldersCBValue, multilineCBValue);
         document.getElementById("FOXEVENTS").value += foxEvent + "\n";
         document.getElementById("decDeg").value += p.latLng.lat().toFixed(4).toString() +',' + p.latLng.lng().toFixed(4).toString() + "\n";
     }
 }
 
-//Format latitude for GPRMC sentence
-function formatLat(lat) {
-    if(lat > 0)
-        return lat.toString()+',N';
-    else
-        return lat.toString()+',S';
-}
-
-//Format longitute for GPRMC sentence
-function formatLon(lon) {
-    if(lon < 0)
-        return lon.toString()+',W';
-    else
-        return lon.toString()+',E';
-}
-
 //Create a GPRMC Sentence from the cordinates, time and date
 function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
-    var lat = DD2DM( latlng.lat());
-    var lng = DD2DM( latlng.lng());
-
-    lat = formatLat(lat.toFixed(4));
-    lng = formatLon(lng.toFixed(4));
+    latAndLng = decimalToNmea(latlng.lat(), latlng.lng());   
 
      if(placeHoldersCB) {
         timeValue = "TIME_PLACEHOLDER";
         dateValue = "DATE_PLACEHOLDER";
         checksumValue = "CHECKSUM_PLACEHOLDER";
 
-        gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
+        gprmc = '$GPRMC,' + timeValue + ',A,' + latAndLng + ',,,'+ dateValue + ',,,';
         checksumValue = nmeaChecksum(gprmc);
         gprmc += '*' + checksumValue;
     } else {
         timeValue = time;
         dateValue = date;
 
-        // console.log('Valid GPRMC *14: *' + nmeaChecksum('$GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519'))
-        gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
+        gprmc = '$GPRMC,' + timeValue + ',A,' + latAndLng + ',,,'+ dateValue + ',,,';
         checksumValue = nmeaChecksum(gprmc);
         gprmc += '*' + checksumValue;
     }
@@ -100,7 +78,6 @@ function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
 }
 
 function nmeaChecksum(sentence) {
-    console.log("Calculating checksum for: " + sentence);
     // Strip leading '$' and trailing '*' if present
     payload = sentence.replace("$", "").split("*")[0]
     console.log("Payload for checksum: " + payload);
@@ -112,25 +89,31 @@ function nmeaChecksum(sentence) {
     return checksum.toString(16).toUpperCase();
 }
 
-function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB) {
+function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB, multilineCBValue) {
     if(placeHoldersCB) {
         imeiValue = "IMEI_PLACEHOLDER";
     } else {
         imeiValue = imei;
-        
     }
+
+    if (multilineCBValue) {
+        newline = "\n";
+    } else {
+        newline = "\\n";
+    }
+
     switch(eventType) {
         case "login":
-            foxEvent = "$<MSG.Info.ServerLogin>\n" + "$DeviceName=DEVICE-FOX3\n" + "$Security=0\n" + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)\n" + "$Hardware=FOX3-4G rev:13-NUCH\n" + "$LastValidPosition=" + gprmc + "\n" + "$IMEI="+ imeiValue + "\n" + "$LocalIP=10.236.242.149\n" + "$CmdVersion=2\n" + "$SUCCESS\n" + "$<end>";
+            foxEvent = "$<MSG.Info.ServerLogin>" + newline + "$DeviceName=DEVICE-FOX3" + newline  + "$Security=0" + newline  + "$Software=avl_3.1.0 (IRNGT1gzLTRHIHJldjoxMy1OVUNIAhEA)" + newline  + "$Hardware=FOX3-4G rev:13-NUCH" + newline  + "$LastValidPosition=" + gprmc + newline + "$IMEI="+ imeiValue + newline  + "$LocalIP=10.236.242.149" + newline  + "$CmdVersion=2" + newline  + "$SUCCESS" + newline  + "$<end>";
             break;
         case "ignition_on":
-            foxEvent = "$<" + imeiValue + " Ignition On Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>"
+            foxEvent = "$<" + imeiValue + " Ignition On Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C" + newline + gprmc + newline  +"$<end>"
             break;
         case "ignition_off":
-            foxEvent = "$<" + imeiValue + " Ignition Off Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C\n" + gprmc + "\n" +"$<end>"
+            foxEvent = "$<" + imeiValue + " Ignition Off Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C" + newline + gprmc + newline  +"$<end>"
             break;
         case "position":
-            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Fuel='35' Odo='91823000' Total_Engine_Hours='4036'>*69\n" + gprmc + "$<end>";
+            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Fuel='35' Odo='91823000' Total_Engine_Hours='4036'>*69" + newline + gprmc + newline + "$<end>";
             break;
         default:
             foxEvent = "ERROR";
@@ -139,26 +122,22 @@ function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB) {
     return foxEvent;
 }
 
+function decimalToNmea(lat, lon) {
+    // Convert Latitude
+    const latDir = lat >= 0 ? 'N' : 'S';
+    const absLat = Math.abs(lat);
+    const latDeg = Math.floor(absLat);
+    const latMin = (absLat - latDeg) * 60;
+    const formattedLat = `${String(latDeg).padStart(2, '0')}${latMin.toFixed(4).padStart(7, '0')}`;
 
-//convert degrees decimal 2 degress minutes format
-function  DD2DM(DegreesDec) {
-    var signChanged = false;
+    // Convert Longitude
+    const lonDir = lon >= 0 ? 'E' : 'W';
+    const absLon = Math.abs(lon);
+    const lonDeg = Math.floor(absLon);
+    const lonMin = (absLon - lonDeg) * 60;
+    const formattedLon = `${String(lonDeg).padStart(3, '0')}${lonMin.toFixed(4).padStart(7, '0')}`;
 
-    DegreesDec = parseFloat(DegreesDec);
-
-    if(DegreesDec < 0) {
-        DegreesDec = Math.abs(DegreesDec);
-        signChanged = true;
-    }
-
-    var dd = Math.floor(DegreesDec);
-    var mmDot = (DegreesDec%1) * 60;
-    var ddmmDotmm = dd*100 + mmDot;
-
-    if (signChanged) {
-        ddmmDotmm *= -1;
-    }
-    return ddmmDotmm;
+    return formattedLat + "," + latDir + "," + formattedLon + "," + lonDir;
 }
 
 
@@ -189,7 +168,7 @@ function countTimer() {
     const paddedMin = (minutes + "").padStart(2, "0");
     const paddedHour = (hour + "").padStart(2, "0");
     
-    console.log("Timer called: " + paddedHour + ":" + paddedMin + ":" + paddedSec);
+    // console.log("Timer called: " + paddedHour + ":" + paddedMin + ":" + paddedSec);
     document.getElementById("time").value = paddedHour + ":" + paddedMin + ":" + paddedSec;
 }
 
