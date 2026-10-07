@@ -20,6 +20,7 @@ function init() {
 function addMarker(p) {
     var date = document.getElementById('date').value;
     var time = document.getElementById('time').value;
+    
 
 
     if(date == "" || time == "") {
@@ -31,13 +32,17 @@ function addMarker(p) {
 
         
         placeHoldersCBValue = document.getElementById("placeHoldersCB").checked;
-        console.log("placeHoldersCBValue: " + placeHoldersCBValue);
         
         imei = document.getElementById("imei").value
         eventType = document.getElementById("eventType").value
 
+        parsedDate = new Date(date);
+        formattedDate =  parsedDate.getDate().toString().padStart(2, '0') + parsedDate.getMonth().toString().padStart(2, '0') + parsedDate.getFullYear().toString().slice(-2);
+        
+        time = time.replace(":", "").replace(":", "").padEnd(6, '0') + ".000";
 
-        gprmcEvent = decCoords2GPRMC(p.latLng, time, date, placeHoldersCBValue);
+        gprmcEvent = decCoords2GPRMC(p.latLng, time, formattedDate, placeHoldersCBValue);
+
         document.getElementById("GPRMC").value += gprmcEvent + "\n";
 
 
@@ -79,7 +84,27 @@ function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
         dateValue = date;
         
     }
-    return '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89';
+    // '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,A*89'
+    // $GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519,,*14
+    console.log('Valid GPRMC *14: *' + nmeaChecksum('$GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519'))
+    
+    gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
+    gprmc += '*' + nmeaChecksum(gprmc);
+    console.log("GPRMC CHECKSUM: " + gprmc);
+    return gprmc;
+}
+
+function nmeaChecksum(sentence) {
+    console.log("Calculating checksum for: " + sentence);
+    // Strip leading '$' and trailing '*' if present
+    payload = sentence.replace("$", "").split("*")[0]
+    console.log("Payload for checksum: " + payload);
+    checksum = 0
+    for (char in payload) {
+        checksum ^= payload[char].charCodeAt();
+        // console.log("Char: " + payload[char] + " Code: " + payload[char].charCodeAt() + " checksum: " + checksum.toString(16).toUpperCase());
+    }
+    return checksum.toString(16).toUpperCase();
 }
 
 function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB) {

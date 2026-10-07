@@ -30,6 +30,8 @@ The code will be need to be updated to add the correct checksum etc if that is w
 2. Add a time in UTC format to the time text box e.g 22:54:46 ==> 225446   (No error checking, so get it right!)
 3. Click on the map to add points and generate the corresponding GPRMC sentences
 
+# Tools
+[Nmea check sum calculator](https://www.meme.au/nmea-checksum.html)
 
 License
 -------
