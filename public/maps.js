@@ -76,20 +76,26 @@ function decCoords2GPRMC(latlng, time, date, placeHoldersCB) {
     lat = formatLat(lat.toFixed(4));
     lng = formatLon(lng.toFixed(4));
 
-    if(placeHoldersCB) {
+     if(placeHoldersCB) {
         timeValue = "TIME_PLACEHOLDER";
         dateValue = "DATE_PLACEHOLDER";
+        checksumValue = "CHECKSUM_PLACEHOLDER";
+
+        gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
+        checksumValue = nmeaChecksum(gprmc);
+        gprmc += '*' + checksumValue;
     } else {
         timeValue = time;
         dateValue = date;
-        
-    }
 
-    // console.log('Valid GPRMC *14: *' + nmeaChecksum('$GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519'))
+        // console.log('Valid GPRMC *14: *' + nmeaChecksum('$GPRMC,220449.000,A,5316.6615,N,00730.1659,W,9.33,313.90,280519'))
+        gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
+        checksumValue = nmeaChecksum(gprmc);
+        gprmc += '*' + checksumValue;
+    }
     
-    gprmc = '$GPRMC,' + timeValue + ',A,' + lat + ',' + lng + ',,,'+ dateValue + ',,,';
-    gprmc += '*' + nmeaChecksum(gprmc);
     console.log("GPRMC CHECKSUM: " + gprmc);
+    
     return gprmc;
 }
 
@@ -159,9 +165,9 @@ function  DD2DM(DegreesDec) {
 //Reset app 
 //i.e Remove all polygons and clear the textarea
 function reset() {
-    document.getElementById("GPRMC").value = " ";
-    document.getElementById("decDeg").value = " ";
-    document.getElementById("FOXEVENTS").value = " ";
+    document.getElementById("GPRMC").value = "";
+    document.getElementById("decDeg").value = "";
+    document.getElementById("FOXEVENTS").value = "";
 
     if (markers) {
         for (i in markers) {
