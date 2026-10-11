@@ -30,7 +30,7 @@ function addMarker(p) {
         
         placeHoldersCBValue = document.getElementById("placeHoldersCB").checked;
         multilineCBValue = document.getElementById('multiline').checked
-
+        console.log("Placeholders: " + placeHoldersCBValue + " Multiline: " + multilineCBValue);
         
         imei = document.getElementById("imei").value
         eventType = document.getElementById("eventType").value
@@ -97,8 +97,10 @@ function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB, multilineCBVa
     }
 
     if (multilineCBValue) {
+        console.log("Using multiline format");
         newline = "\n";
     } else {
+        console.log("Using single line format");
         newline = "\\n";
     }
 
@@ -113,7 +115,13 @@ function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB, multilineCBVa
             foxEvent = "$<" + imeiValue + " Ignition Off Voltage='11.988' RPM='225' Fuel='34' Odo='91826000' Total_Engine_Hours='4038'>*5C" + newline + gprmc + newline  +"$<end>"
             break;
         case "position":
-            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Fuel='35' Odo='91823000' Total_Engine_Hours='4036'>*69" + newline + gprmc + newline + "$<end>";
+            foxEvent = "$<" + imeiValue + " Position Voltage='13.753' RPM='1268' Speed='53' Fuel='35' Odo='91823000' EngineTemp='85' Load='n/a' EngineHours='700.00' FuelRate='7886' Accel='4' Brake='0' Total_distance='0.074' Total_Engine_Hours='4036'>*69" + newline + gprmc + newline + "$<end>";
+            break;
+        case "trip_start":
+            foxEvent = "$<" + imeiValue + " Trip Start RPM='1268' Speed='53' Fuel='35' Odo='91823000' EngineTemp='85' Load='n/a' EngineHours='700.00' FuelRate='7886' Accel='4' Brake='0' Total_distance='0.074' Total_Engine_Hours='4036'>*5C" + newline + gprmc + newline  +"$<end>"
+            break;
+        case "trip_distance":
+            foxEvent = "$<" + imeiValue + " Trip Distance RPM='1268' Speed='53' Fuel='35' Odo='91823000' EngineTemp='85' Load='n/a' EngineHours='700.00' FuelRate='7886' Accel='4' Brake='0' Total_distance='0.074' Total_Engine_Hours='4036'>*5C" + newline + gprmc + newline  +"$<end>"
             break;
         default:
             foxEvent = "ERROR";
