@@ -121,7 +121,7 @@ function generateFoxEvents(imei, gprmc, eventType, placeHoldersCB, multilineCBVa
             foxEvent = "$<" + imeiValue + " Trip Start RPM='1268' Speed='53' Fuel='35' Odo='91823000' EngineTemp='85' Load='n/a' EngineHours='700.00' FuelRate='7886' Accel='4' Brake='0' Total_distance='0.074' Total_Engine_Hours='4036'>*5C" + newline + gprmc + newline  +"$<end>"
             break;
         case "trip_distance":
-            foxEvent = "$<" + imeiValue + " Trip Distance RPM='1268' Speed='53' Fuel='35' Odo='91823000' EngineTemp='85' Load='n/a' EngineHours='700.00' FuelRate='7886' Accel='4' Brake='0' Total_distance='0.074' Total_Engine_Hours='4036'>*5C" + newline + gprmc + newline  +"$<end>"
+            foxEvent = "$<" + imeiValue + " Trip Distance='100' RPM='1268' Speed='53' Fuel='35' Odo='91823000' EngineTemp='85' Load='n/a' EngineHours='700.00' FuelRate='7886' Accel='4' Brake='0' Total_distance='0.074' Total_Engine_Hours='4036'>*5C" + newline + gprmc + newline  +"$<end>"
             break;
         default:
             foxEvent = "ERROR";
